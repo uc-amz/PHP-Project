@@ -1,164 +1,149 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<?php
+    include_once "./smarty/Smarty.class.php";
+    $test_page = new Smarty();
 
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    session_start();
+    $_SESSION['attempted'] = array();
 
-    <!-- jQuery library -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.slim.min.js"></script>
+    $data = file_get_contents("question.json");
+    $data = json_decode($data, true);
+    foreach($data as $row)
+        $_SESSION['attempted'][$row['content_id']] = "Not Attempted";
+    $test_page->assign('data', $data);
+    $test_page->assign("session", $_SESSION['attempted']);
 
-    <!-- Popper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    $test_page->display("test.tpl");
+?>
 
-    <!-- Latest compiled JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    var currentQuestion = [];
+    var content_id = "<?php echo $data[0]['content_id'] ?>";
+    var current_num = 1;
+    var timeLeft = 5;
 
-    <link href="https://staging.appcropolis.com/functions/preview/appcropolis/amk-source/main.css" rel="stylesheet">
-
-    <title>PHP Project | Dashboard</title>
-</head>
-<body>
-    <div class="container-fluid">
-        <div class="row border border-dark d-flex">
-            <div class="col-4">
-                <img src="https://www.ucertify.com/layout/themes/bootstrap4/images/logo/ucertify_logo.png" alt="logo" class="mt-1">
-            </div>
-            <div class="col-8">
-                <h1 class="ml-5">ucertify Test Prep</h1>
-            </div>
-        </div>
-    </div>
-    
-    <div class="container">
-        <!-- Modal for side panel -->
-        <div class="amk modal fade left from-left delay-200 modal-example-sidebar-left" id="list" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">All Questions</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <ul class="list-group">
-                            <?php
-                                $data = file_get_contents("question.json");
-                                $data = json_decode($data, true);
-                                $count = 0;
-                                foreach($data as $row){
-                                    $count++;
-                                    echo '<a type="button" data-dismiss="modal" id="'.$row['content_id'].'" class="questionLink"> <li class="list-group-item"><span>Q '. $count .'. </span>'.$row['snippet'].'</li></a>';
-                                }
-                            ?>
-                        </ul>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        
-
-        <!-- Modal Side Panel End -->
-
-        <div class="row mt-5">
-            <div class="col">
-                <div class="row" id="question_content">
-                    <div class="row">
-                        <p class="d-block" id="selectedQuestion"><?php echo $data[0]['snippet'] ?></p>
-                    </div>
-                    <div class="row">
-                        <?php
-                        $row = json_decode($data[0]['content_text'], true)['answers'];
-
-                        foreach($row as $line): ?>
-                                <input type="radio" class="selected_option ml-3 mr-2" name="userChecked" value="<?php echo $line['id'] ?>" id="<?php echo $line['id'] ?>">
-                                <label for="<?php echo $line['id'] ?>"><?php echo $line['answer'] ?></label><br>
-                        <?php endforeach ?>
-                    </div>
-                </div>
-
-                <div class="row bg-light">
-                    <p>1:20</p>
-                    <button class="btn btn-secondary mx-2" type="button" data-target="#list" data-toggle="modal">List</button>
-                    <button class="btn btn-secondary mx-2" id="prevBtn">Previous</button>
-                    <p><span id="current_num">1</span> of <span id="total_num">10</span></p>
-                    <button class="btn btn-secondary mx-2" id="nextBtn">Next</button>
-                    <button class="btn btn-secondary mx-2">End Test</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <script>
-        var currentQuestion = [];
-        var content_id = "<?php echo $data[0]['content_id'] ?>";
-        var current_num = 1;
-
-        $(document).ready(function(){
-            getTotalQuestion();
-            $('.questionLink').click(function(){
-                id = $(this).attr('id');
-                callerObj = $(this);
-                content_id = id;
-                $.ajax({
-                    url:"process.php",
-                    type:"POST",
-                    data:{
-                        id:id
-                    },
-                    success:function(data, status){
-                        $('#question_content').html(data);
-                        current_num = callerObj.find('span').text().match(/\d+/)[0];
-                        $('#current_num').text(current_num);
-                    }
-                })
-            })
-
-            $('#prevBtn').click(function(){
-                if(current_num > 1){
-                    console.log("entered");
-                    $.ajax({
-                        url:"process.php",
-                        type:"POST",
-                        data:{
-                            key:"prev_question",
-                            content_id:content_id
-                        },
-                        success:function(data, status){
-                            console.log(data)
-                            $('#question_content').html(data.content);
-                            current_num = callerObj.find('span').text().match(/\d+/)[0];
-                            $('#current_num').text(current_num);
-                            content_id = data.content_id;
-                        }
-                    })
-                }
-            })
-        })
-
-        function getTotalQuestion(){
+    $.ajax({
+        url:"process.php",
+        type:"POST",
+        data:{
+            key:"total_question"
+        },
+        success:function(data, status){
+            if(status == "success"){
+                $('#total_num').text(data);
+            }
+        }
+    })
+    $(document).ready(function(){
+        $('.questionLink').click(function(){
+            id = $(this).attr('id');
+            callerObj = $(this);
+            content_id = id;
             $.ajax({
                 url:"process.php",
                 type:"POST",
                 data:{
-                    key:"total_question"
+                    id:id
+                },
+                success:function(data, status){
+                    $('#question_content').html(data);
+                    current_num = callerObj.find('span').text().match(/\d+/)[0];
+                    $('#current_num').text(current_num);
+                }
+            })
+        })
+
+        $('#prevBtn').click(function(){
+            if(current_num > 1){
+                $.ajax({
+                    url:"process.php",
+                    type:"POST",
+                    data:{
+                        key:"prev_question",
+                        content_id:content_id
+                    },
+                    success:function(data, status){
+                        $('#question_content').html(data);
+                        current_num--;
+                        $('#current_num').text(current_num);
+                        content_id = $('#question_content').find('p').attr('id');
+                    }
+                })
+            }
+        })
+        $('#nextBtn').click(function(){
+            if(current_num < $('#total_num').text()){
+                $.ajax({
+                    url:"process.php",
+                    type:"POST",
+                    data:{
+                        key:"next_question",
+                        content_id:content_id
+                    },
+                    success:function(data, status){
+                        $('#question_content').html(data);
+                        current_num++;
+                        $('#current_num').text(current_num);
+                        content_id = $('#question_content').find('p').attr('id');
+                    }
+                })
+            }
+        })
+        $('#endBtn').click(function(){
+            $.ajax({
+                url:"process.php",
+                type:"POST",
+                data:{
+                    key:"end_test"
                 },
                 success:function(data, status){
                     if(status == "success"){
-                        $('#total_num').text(data);
+                        $('#end_test_body').html(data);
                     }
                 }
             })
+        })
+        $('#yesBtn').click(function(){
+            window.location.replace("result.php");
+        })
+
+        // This is for timer.
+        timeLeft = $('#total_num').text()*60;
+    })
+
+    function option_change(){
+        $('.selected_option').change(function(){
+            answer_id = $(this).attr('id');
+            $.ajax({
+                url:"process.php",
+                type:"POST",
+                data:{
+                    key:"answer_changed",
+                    content_id:content_id,
+                    answer_id:answer_id
+                },
+                success:function(data, status){}
+            })
+        })
+    }
+
+    function timeOut(){
+        option_change();
+        minute = Math.floor(timeLeft/60);
+        second = timeLeft%60;
+
+        if(timeLeft <= 0){
+            clearTimeout(tm);
+            window.location.replace("result.php");
         }
-    </script>
-</body>
-</html>
+        else{
+            if(minute < 10)
+                minute = "0" + minute;
+            if(second < 10)
+                second = "0" + second;
+            $('#timer').text(minute + ":" + second);
+        }
+        timeLeft--;
+        var tm = setTimeout(function(){timeOut()}, 1000);
+    }
+</script>

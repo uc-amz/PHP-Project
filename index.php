@@ -1,9 +1,14 @@
-<?php include_once "header.php"; ?>
+<?php
+    include_once "./smarty/Smarty.class.php";
+    $index = new Smarty();
 
-<div class="container-fluid">
-    <div class="max-width max-height d-flex justify-content-center align-item-center">
-        <a class="btn btn-secondary" href="test.php">Start Test</a>
-    </div>
-</div>
+    $index->display("index.tpl");
+?>
 
-<?php include_once "footer.php"; ?>
+<script>
+    $(document).ready(function(){
+        $('#startBtn').click(function(){
+            window.location.replace("test.php");
+        })
+    })
+</script>
