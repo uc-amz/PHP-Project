@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.3.0, created on 2023-01-10 10:02:00
+/* Smarty version 4.3.0, created on 2023-01-10 11:52:42
   from 'C:\xampp\htdocs\ucertify\PHP-Project\review.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.3.0',
-  'unifunc' => 'content_63bd2988d49760_53452325',
+  'unifunc' => 'content_63bd437a72a5d8_81461874',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '41cce6b87c1bc451f657f803f345ffa81f538062' => 
     array (
       0 => 'C:\\xampp\\htdocs\\ucertify\\PHP-Project\\review.tpl',
-      1 => 1673341317,
+      1 => 1673347959,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_63bd2988d49760_53452325 (Smarty_Internal_Template $_smarty_tpl) {
+function content_63bd437a72a5d8_81461874 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -98,7 +98,7 @@ $_smarty_tpl->tpl_vars['option']->do_else = true;
 if ($_from !== null) foreach ($_from as $_smarty_tpl->tpl_vars['option']->value) {
 $_smarty_tpl->tpl_vars['option']->do_else = false;
 ?>
-                            <?php if ($_SESSION['attempted'][$_smarty_tpl->tpl_vars['row']->value['content_id']] != "Not Attempted" && $_smarty_tpl->tpl_vars['smart']->value['session']['attempted'][$_smarty_tpl->tpl_vars['row']->value['content_id']] == $_smarty_tpl->tpl_vars['option']->value['id']) {?>
+                            <?php if ($_smarty_tpl->tpl_vars['session']->value[$_smarty_tpl->tpl_vars['row']->value['content_id']] != "Not Attempted" && $_smarty_tpl->tpl_vars['session']->value[$_smarty_tpl->tpl_vars['row']->value['content_id']] == $_smarty_tpl->tpl_vars['option']->value['id']) {?>
                                 <input type="radio" class="ml-3 mr-2" checked="checked" disabled id="<?php echo $_smarty_tpl->tpl_vars['option']->value['id'];?>
 ">
                                 <label for="<?php echo $_smarty_tpl->tpl_vars['option']->value['id'];?>

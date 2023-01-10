@@ -11,12 +11,14 @@
     $review->assign("data", $data);
     $content_id = $_GET['content_id'];
     $review->assign("content_id", $content_id);
+    $review->assign('session', $_SESSION['attempted']);
     $review->display("review.tpl");
 ?> 
 
 <script>
     var content_id = "<?php echo $_GET['content_id'] ?>";
-    var current_num = 1;
+    var current_num = "<?php echo $_GET['current_num'] ?>";
+    var total_num = 0;
 
     $.ajax({
         url:"process.php",
@@ -34,6 +36,7 @@
 
     getTotalQuestion();
     $(document).ready(function(){
+        $('#current_num').text(current_num);
         $('#dashboardBtn').click(function(){
             window.location.replace("logout.php");
         })
@@ -73,7 +76,7 @@
             }
         })
         $('#nextBtn').click(function(){
-            if(current_num < $('#total_num').text()){
+            if(current_num < Number(total_num)){
                 $.ajax({
                     url:"process.php",
                     type:"POST",
@@ -102,6 +105,8 @@
                     }
                 })
             }
+            else
+                alert("false");
         })
     })
 
@@ -114,7 +119,8 @@
             },
             success:function(data, status){
                 if(status == "success"){
-                    $('#total_num').text(data);
+                    total_num = data;
+                    $('#total_num').text(total_num);
                 }
             }
         })

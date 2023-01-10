@@ -48,7 +48,7 @@
                         {$content = json_decode($row.content_text, true)}
                         {$content = $content.answers}
                         {foreach $content as $option}
-                            {if $smarty.session.attempted[$row['content_id']] neq "Not Attempted" and $smart.session.attempted[$row['content_id']] eq $option['id']}
+                            {if $session[$row['content_id']] neq "Not Attempted" and $session[$row['content_id']] eq $option['id']}
                                 <input type="radio" class="ml-3 mr-2" checked="checked" disabled id="{$option['id']}">
                                 <label for="{$option['id']}">{$option['answer']}</label><br>
                             {else}

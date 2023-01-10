@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.3.0, created on 2023-01-10 09:45:58
+/* Smarty version 4.3.0, created on 2023-01-10 11:13:21
   from 'C:\xampp\htdocs\ucertify\PHP-Project\result.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.3.0',
-  'unifunc' => 'content_63bd25c672eeb4_48420424',
+  'unifunc' => 'content_63bd3a414f4179_00631967',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'b403651790baf56a08cfdf621883926b52262f40' => 
     array (
       0 => 'C:\\xampp\\htdocs\\ucertify\\PHP-Project\\result.tpl',
-      1 => 1673338362,
+      1 => 1673345558,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_63bd25c672eeb4_48420424 (Smarty_Internal_Template $_smarty_tpl) {
+function content_63bd3a414f4179_00631967 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -111,6 +111,7 @@ $_smarty_tpl->tpl_vars['row']->do_else = false;
                             <td><?php echo $_smarty_tpl->tpl_vars['index']->value;?>
 </td>
                             <td><a href="review.php?content_id=<?php echo $_smarty_tpl->tpl_vars['row']->value['content_id'];?>
+&current_num=<?php echo $_smarty_tpl->tpl_vars['index']->value;?>
 " class="question_link" id="<?php echo $_smarty_tpl->tpl_vars['row']->value['content_id'];?>
 "><?php echo $_smarty_tpl->tpl_vars['row']->value['snippet'];?>
 </a></td>

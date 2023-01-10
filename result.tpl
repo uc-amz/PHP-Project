@@ -66,7 +66,7 @@
                     {foreach $data as $row}
                         <tr>
                             <td>{$index}</td>
-                            <td><a href="review.php?content_id={$row.content_id}" class="question_link" id="{$row.content_id}">{$row.snippet}</a></td>
+                            <td><a href="review.php?content_id={$row.content_id}&current_num={$index}" class="question_link" id="{$row.content_id}">{$row.snippet}</a></td>
                             <td>
                                 {$result = "Not Attempted"}
                                 {assign var='content' value=json_decode($row.content_text, true)}
