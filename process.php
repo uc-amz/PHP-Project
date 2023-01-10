@@ -3,6 +3,23 @@ if(isset($_POST['key']) && isset($_POST['content_id']) && isset($_POST['answer_i
     extract($_POST);
     session_start();
     $_SESSION['attempted'][$content_id] = $answer_id;
+
+    $data = file_get_contents("question.json");
+    $data = json_decode($data, true);
+
+    $count = 0;
+    $response = '<ul class="list-group">';
+    foreach($data as $row){
+        $count++;
+        if($_SESSION['attempted'][$row['content_id']] == "Not Attempted"){
+            $response .= '<a type="button" data-dismiss="modal" id="'.$row['content_id'].'" class="questionLink"> <li class="list-group-item bg-danger text-white"><span>Q '.$count.' </span>'.$row['snippet'].'</li></a>';
+        }
+        else{
+            $response .= '<a type="button" data-dismiss="modal" id="'.$row['content_id'].'" class="questionLink"> <li class="list-group-item bg-success text-white"><span>Q '.$count.' </span>'.$row['snippet'].'</li></a>';
+        }
+    }
+    $response .= '</ul>';
+    echo $response;
 }
 
 if(isset($_POST['key']) && isset($_POST['content_id']) && $_POST['key'] == "explain"){

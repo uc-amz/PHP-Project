@@ -48,7 +48,7 @@
                         {$content = json_decode($row.content_text, true)}
                         {$content = $content.answers}
                         {foreach $content as $option}
-                            {if $session[$row['content_id']] neq "Not Attempted" and $session[$row['content_id']] eq $option['id']}
+                            {if $smarty.session.attempted[$row['content_id']] neq "Not Attempted" and $smart.session.attempted[$row['content_id']] eq $option['id']}
                                 <input type="radio" class="ml-3 mr-2" checked="checked" disabled id="{$option['id']}">
                                 <label for="{$option['id']}">{$option['answer']}</label><br>
                             {else}
@@ -61,16 +61,16 @@
                 {/foreach}
             </div>
         </div>
-        <div class="d-flex bg-light card-footer bg-dark text-white justify-content-center">
+        <div class="alert alert-info mt-5 mb-5">
+            <strong>Explaination: </strong>
+            <p id="explain"></p>
+        </div>
+        <div class="d-flex bg-light card-footer bg-dark text-white justify-content-center fixed-bottom mb-1">
             <button class="btn btn-secondary mx-2" id="dashboardBtn">Dashboard</button>
             <button class="btn btn-secondary mx-2" id="prevBtn">Previous</button>
             <p><span id="current_num">1</span> of <span id="total_num"></span></p>
             <button class="btn btn-secondary mx-2" id="nextBtn">Next</button>
             <button class="btn btn-secondary mx-2" id="resultBtn">Result</button>
-        </div>
-        <div class="alert alert-info mt-5">
-            <strong>Explaination: </strong>
-            <p id="explain"></p>
         </div>
     </div>
 </body>

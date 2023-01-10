@@ -7,16 +7,15 @@
 
     $data = file_get_contents("question.json");
     $data = json_decode($data, true);
-    foreach($data as $row)
+    foreach($data as $row){
         $_SESSION['attempted'][$row['content_id']] = "Not Attempted";
+    }
     $test_page->assign('data', $data);
-    $test_page->assign("session", $_SESSION['attempted']);
 
     $test_page->display("test.tpl");
 ?>
 
 <script>
-
     var currentQuestion = [];
     var content_id = "<?php echo $data[0]['content_id'] ?>";
     var current_num = 1;
@@ -34,25 +33,28 @@
             }
         }
     })
-    $(document).ready(function(){
-        $('.questionLink').click(function(){
-            id = $(this).attr('id');
-            callerObj = $(this);
-            content_id = id;
-            $.ajax({
-                url:"process.php",
-                type:"POST",
-                data:{
-                    id:id
-                },
-                success:function(data, status){
-                    $('#question_content').html(data);
-                    current_num = callerObj.find('span').text().match(/\d+/)[0];
-                    $('#current_num').text(current_num);
-                }
-            })
-        })
 
+    function timeOut(){
+        option_change();
+        minute = Math.floor(timeLeft/60);
+        second = timeLeft%60;
+
+        if(timeLeft == 0){
+            clearTimeout(tm);
+            window.location.replace("result.php");
+        }
+        else{
+            if(minute < 10)
+                minute = "0" + minute;
+            if(second < 10)
+                second = "0" + second;
+            $('#timer').text(minute + ":" + second);
+        }
+        timeLeft--;
+        var tm = setTimeout(function(){timeOut()}, 1000);
+    }
+
+    $(document).ready(function(){
         $('#prevBtn').click(function(){
             if(current_num > 1){
                 $.ajax({
@@ -122,28 +124,27 @@
                     content_id:content_id,
                     answer_id:answer_id
                 },
-                success:function(data, status){}
+                success:function(data, status){
+                    $('#sidePanel').html(data);
+                }
             })
         })
-    }
-
-    function timeOut(){
-        option_change();
-        minute = Math.floor(timeLeft/60);
-        second = timeLeft%60;
-
-        if(timeLeft <= 0){
-            clearTimeout(tm);
-            window.location.replace("result.php");
-        }
-        else{
-            if(minute < 10)
-                minute = "0" + minute;
-            if(second < 10)
-                second = "0" + second;
-            $('#timer').text(minute + ":" + second);
-        }
-        timeLeft--;
-        var tm = setTimeout(function(){timeOut()}, 1000);
+        $('.questionLink').click(function(){
+            id = $(this).attr('id');
+            callerObj = $(this);
+            content_id = id;
+            $.ajax({
+                url:"process.php",
+                type:"POST",
+                data:{
+                    id:id
+                },
+                success:function(data, status){
+                    $('#question_content').html(data);
+                    current_num = callerObj.find('span').text().match(/\d+/)[0];
+                    $('#current_num').text(current_num);
+                }
+            })
+        })
     }
 </script>

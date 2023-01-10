@@ -1,7 +1,7 @@
 <?php
     session_start();
-    if(!isset($_SESSION['attempted']))
-        header("location: index.php");
+    // if(!isset($_SESSION['attempted']))
+    //     header("location: index.php");
 
     include_once "./smarty/Smarty.class.php";
     $result = new Smarty();
@@ -39,8 +39,7 @@
 <script>
     $(document).ready(function(){
         $('#dashboardBtn').click(function(){
-            <?php session_destroy() ?>
-            window.location.replace("index.php");
+            window.location.replace("logout.php");
         })
     })
 </script>

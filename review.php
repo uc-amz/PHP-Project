@@ -11,11 +11,8 @@
     $review->assign("data", $data);
     $content_id = $_GET['content_id'];
     $review->assign("content_id", $content_id);
-    $session = $_SESSION['attempted'];
-    $review->assign("session", $session);
-
     $review->display("review.tpl");
-?>
+?> 
 
 <script>
     var content_id = "<?php echo $_GET['content_id'] ?>";
@@ -38,8 +35,7 @@
     getTotalQuestion();
     $(document).ready(function(){
         $('#dashboardBtn').click(function(){
-            <?php session_destroy() ?>
-            window.location.replace("index.php");
+            window.location.replace("logout.php");
         })
         $('#resultBtn').click(function(){
             window.location.replace("result.php");

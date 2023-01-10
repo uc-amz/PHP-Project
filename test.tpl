@@ -38,21 +38,21 @@
     <div class="container">
         <!-- Modal for side panel -->
         <div class="amk modal fade left from-left delay-200 modal-example-sidebar-left" id="list" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog" role="document" style="width: 500px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">All Questions</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" id="sidePanel">
                         <ul class="list-group">
                             {$count = 0}
                             {foreach $data as $row}
                                 {$count = $count + 1}
-                                {if $session[$row['content_id']] == "Not Attempted"}
-                                    <a type="button" data-dismiss="modal" id="{$row['content_id']}" class="questionLink"> <li class="list-group-item"><span>Q {$count} </span>{$row['snippet']}</li></a>
+                                {if $smarty.session.attempted[$row['content_id']] == "Not Attempted"}
+                                    <a type="button" data-dismiss="modal" id="{$row['content_id']}" class="questionLink"> <li class="list-group-item bg-danger text-white"><span>Q {$count} </span>{$row['snippet']}</li></a>
                                 {else}
-                                    <a type="button" data-dismiss="modal" id="{$row['content_id']}" class="questionLink"> <li class="list-group-item"><span>Q {$count} </span>{$row['snippet']}</li></a>
+                                    <a type="button" data-dismiss="modal" id="{$row['content_id']}" class="questionLink"> <li class="list-group-item bg-success text-white"><span>Q {$count} </span>{$row['snippet']}</li></a>
                                 {/if}
                             {/foreach}
                         </ul>
@@ -97,7 +97,7 @@
             </div>
         </div>
 
-        <div class="d-flex bg-dark card-footer justify-content-center text-white">
+        <div class="d-flex bg-dark card-footer justify-content-center text-white fixed-bottom mb-1">
             <p id="timer"></p>
             <button class="btn btn-secondary mx-2" type="button" data-target="#list" data-toggle="modal">List</button>
             <button class="btn btn-secondary mx-2" id="prevBtn">Previous</button>

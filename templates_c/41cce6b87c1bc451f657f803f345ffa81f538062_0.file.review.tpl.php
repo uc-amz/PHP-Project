@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.3.0, created on 2023-01-05 17:53:27
+/* Smarty version 4.3.0, created on 2023-01-10 10:02:00
   from 'C:\xampp\htdocs\ucertify\PHP-Project\review.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.3.0',
-  'unifunc' => 'content_63b700877c39e7_19116401',
+  'unifunc' => 'content_63bd2988d49760_53452325',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '41cce6b87c1bc451f657f803f345ffa81f538062' => 
     array (
       0 => 'C:\\xampp\\htdocs\\ucertify\\PHP-Project\\review.tpl',
-      1 => 1672937588,
+      1 => 1673341317,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_63b700877c39e7_19116401 (Smarty_Internal_Template $_smarty_tpl) {
+function content_63bd2988d49760_53452325 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -98,7 +98,7 @@ $_smarty_tpl->tpl_vars['option']->do_else = true;
 if ($_from !== null) foreach ($_from as $_smarty_tpl->tpl_vars['option']->value) {
 $_smarty_tpl->tpl_vars['option']->do_else = false;
 ?>
-                            <?php if ($_smarty_tpl->tpl_vars['session']->value[$_smarty_tpl->tpl_vars['row']->value['content_id']] != "Not Attempted" && $_smarty_tpl->tpl_vars['session']->value[$_smarty_tpl->tpl_vars['row']->value['content_id']] == $_smarty_tpl->tpl_vars['option']->value['id']) {?>
+                            <?php if ($_SESSION['attempted'][$_smarty_tpl->tpl_vars['row']->value['content_id']] != "Not Attempted" && $_smarty_tpl->tpl_vars['smart']->value['session']['attempted'][$_smarty_tpl->tpl_vars['row']->value['content_id']] == $_smarty_tpl->tpl_vars['option']->value['id']) {?>
                                 <input type="radio" class="ml-3 mr-2" checked="checked" disabled id="<?php echo $_smarty_tpl->tpl_vars['option']->value['id'];?>
 ">
                                 <label for="<?php echo $_smarty_tpl->tpl_vars['option']->value['id'];?>
@@ -121,16 +121,16 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
 $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
             </div>
         </div>
-        <div class="d-flex bg-light card-footer bg-dark text-white justify-content-center">
+        <div class="alert alert-info mt-5 mb-5">
+            <strong>Explaination: </strong>
+            <p id="explain"></p>
+        </div>
+        <div class="d-flex bg-light card-footer bg-dark text-white justify-content-center fixed-bottom mb-1">
             <button class="btn btn-secondary mx-2" id="dashboardBtn">Dashboard</button>
             <button class="btn btn-secondary mx-2" id="prevBtn">Previous</button>
             <p><span id="current_num">1</span> of <span id="total_num"></span></p>
             <button class="btn btn-secondary mx-2" id="nextBtn">Next</button>
             <button class="btn btn-secondary mx-2" id="resultBtn">Result</button>
-        </div>
-        <div class="alert alert-info mt-5">
-            <strong>Explaination: </strong>
-            <p id="explain"></p>
         </div>
     </div>
 </body>

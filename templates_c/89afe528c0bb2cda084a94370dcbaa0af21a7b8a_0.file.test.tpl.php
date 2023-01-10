@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.3.0, created on 2023-01-05 18:46:45
+/* Smarty version 4.3.0, created on 2023-01-10 10:13:07
   from 'C:\xampp\htdocs\ucertify\PHP-Project\test.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.3.0',
-  'unifunc' => 'content_63b70d05298c69_96972588',
+  'unifunc' => 'content_63bd2c23a54a59_61213513',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '89afe528c0bb2cda084a94370dcbaa0af21a7b8a' => 
     array (
       0 => 'C:\\xampp\\htdocs\\ucertify\\PHP-Project\\test.tpl',
-      1 => 1672940799,
+      1 => 1673341980,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_63b70d05298c69_96972588 (Smarty_Internal_Template $_smarty_tpl) {
+function content_63bd2c23a54a59_61213513 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,13 +69,13 @@ function content_63b70d05298c69_96972588 (Smarty_Internal_Template $_smarty_tpl)
     <div class="container">
         <!-- Modal for side panel -->
         <div class="amk modal fade left from-left delay-200 modal-example-sidebar-left" id="list" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog" role="document" style="width: 500px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">All Questions</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" id="sidePanel">
                         <ul class="list-group">
                             <?php $_smarty_tpl->_assignInScope('count', 0);?>
                             <?php
@@ -85,14 +85,14 @@ if ($_from !== null) foreach ($_from as $_smarty_tpl->tpl_vars['row']->value) {
 $_smarty_tpl->tpl_vars['row']->do_else = false;
 ?>
                                 <?php $_smarty_tpl->_assignInScope('count', $_smarty_tpl->tpl_vars['count']->value+1);?>
-                                <?php if ($_smarty_tpl->tpl_vars['session']->value[$_smarty_tpl->tpl_vars['row']->value['content_id']] == "Not Attempted") {?>
+                                <?php if ($_SESSION['attempted'][$_smarty_tpl->tpl_vars['row']->value['content_id']] == "Not Attempted") {?>
                                     <a type="button" data-dismiss="modal" id="<?php echo $_smarty_tpl->tpl_vars['row']->value['content_id'];?>
-" class="questionLink"> <li class="list-group-item"><span>Q <?php echo $_smarty_tpl->tpl_vars['count']->value;?>
+" class="questionLink"> <li class="list-group-item bg-danger text-white"><span>Q <?php echo $_smarty_tpl->tpl_vars['count']->value;?>
  </span><?php echo $_smarty_tpl->tpl_vars['row']->value['snippet'];?>
 </li></a>
                                 <?php } else { ?>
                                     <a type="button" data-dismiss="modal" id="<?php echo $_smarty_tpl->tpl_vars['row']->value['content_id'];?>
-" class="questionLink"> <li class="list-group-item"><span>Q <?php echo $_smarty_tpl->tpl_vars['count']->value;?>
+" class="questionLink"> <li class="list-group-item bg-success text-white"><span>Q <?php echo $_smarty_tpl->tpl_vars['count']->value;?>
  </span><?php echo $_smarty_tpl->tpl_vars['row']->value['snippet'];?>
 </li></a>
                                 <?php }?>
@@ -154,7 +154,7 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
             </div>
         </div>
 
-        <div class="d-flex bg-dark card-footer justify-content-center text-white">
+        <div class="d-flex bg-dark card-footer justify-content-center text-white fixed-bottom mb-1">
             <p id="timer"></p>
             <button class="btn btn-secondary mx-2" type="button" data-target="#list" data-toggle="modal">List</button>
             <button class="btn btn-secondary mx-2" id="prevBtn">Previous</button>
