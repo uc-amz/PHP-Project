@@ -19,7 +19,7 @@
     var currentQuestion = [];
     var content_id = "<?php echo $data[0]['content_id'] ?>";
     var current_num = 1;
-    var timeLeft = 5;
+    var timeLeft;
 
     $.ajax({
         url:"process.php",
@@ -110,7 +110,7 @@
         })
 
         // This is for timer.
-        timeLeft = $('#total_num').text()*60;
+        timeLeft = Number($('#total_num').text()*60);
     })
 
     function option_change(){
