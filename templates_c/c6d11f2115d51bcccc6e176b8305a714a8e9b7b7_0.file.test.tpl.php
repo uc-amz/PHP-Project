@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.3.0, created on 2023-01-10 10:13:07
-  from 'C:\xampp\htdocs\ucertify\PHP-Project\test.tpl' */
+/* Smarty version 4.3.0, created on 2023-01-19 10:31:42
+  from 'E:\uCertify\website\PHP-Project2\test.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.3.0',
-  'unifunc' => 'content_63bd2c23a54a59_61213513',
+  'unifunc' => 'content_63c90dfe8fe226_69217506',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
-    '89afe528c0bb2cda084a94370dcbaa0af21a7b8a' => 
+    'c6d11f2115d51bcccc6e176b8305a714a8e9b7b7' => 
     array (
-      0 => 'C:\\xampp\\htdocs\\ucertify\\PHP-Project\\test.tpl',
-      1 => 1673341980,
+      0 => 'E:\\uCertify\\website\\PHP-Project2\\test.tpl',
+      1 => 1674120686,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_63bd2c23a54a59_61213513 (Smarty_Internal_Template $_smarty_tpl) {
+function content_63c90dfe8fe226_69217506 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,7 +52,12 @@ function content_63bd2c23a54a59_61213513 (Smarty_Internal_Template $_smarty_tpl)
 
     <link href="https://staging.appcropolis.com/functions/preview/appcropolis/amk-source/main.css" rel="stylesheet">
 
-    <title>PHP Project | Dashboard</title>
+    <title>PHP Project | Test</title>
+    <style>
+        p{
+            margin-bottom: 0;
+        }
+    </style>
 </head>
 <body onload="timeOut()">
     <div class="container-fluid">
@@ -77,25 +82,18 @@ function content_63bd2c23a54a59_61213513 (Smarty_Internal_Template $_smarty_tpl)
                     </div>
                     <div class="modal-body" id="sidePanel">
                         <ul class="list-group">
-                            <?php $_smarty_tpl->_assignInScope('count', 0);?>
                             <?php
-$_from = $_smarty_tpl->smarty->ext->_foreach->init($_smarty_tpl, $_smarty_tpl->tpl_vars['data']->value, 'row');
+$_from = $_smarty_tpl->smarty->ext->_foreach->init($_smarty_tpl, $_smarty_tpl->tpl_vars['all_question']->value, 'row');
 $_smarty_tpl->tpl_vars['row']->do_else = true;
 if ($_from !== null) foreach ($_from as $_smarty_tpl->tpl_vars['row']->value) {
 $_smarty_tpl->tpl_vars['row']->do_else = false;
 ?>
-                                <?php $_smarty_tpl->_assignInScope('count', $_smarty_tpl->tpl_vars['count']->value+1);?>
-                                <?php if ($_SESSION['attempted'][$_smarty_tpl->tpl_vars['row']->value['content_id']] == "Not Attempted") {?>
+                                <div class="card">
                                     <a type="button" data-dismiss="modal" id="<?php echo $_smarty_tpl->tpl_vars['row']->value['content_id'];?>
-" class="questionLink"> <li class="list-group-item bg-danger text-white"><span>Q <?php echo $_smarty_tpl->tpl_vars['count']->value;?>
- </span><?php echo $_smarty_tpl->tpl_vars['row']->value['snippet'];?>
+" class="questionLink"> <li class="list-group-item bg-danger text-white"><span>Q <?php echo $_smarty_tpl->tpl_vars['row']->value['number'];?>
+ </span><?php echo $_smarty_tpl->tpl_vars['row']->value['question'];?>
 </li></a>
-                                <?php } else { ?>
-                                    <a type="button" data-dismiss="modal" id="<?php echo $_smarty_tpl->tpl_vars['row']->value['content_id'];?>
-" class="questionLink"> <li class="list-group-item bg-success text-white"><span>Q <?php echo $_smarty_tpl->tpl_vars['count']->value;?>
- </span><?php echo $_smarty_tpl->tpl_vars['row']->value['snippet'];?>
-</li></a>
-                                <?php }?>
+                                </div>
                             <?php
 }
 $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
@@ -114,7 +112,7 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header text-center">
-                        <strong>Are you sure want to end test</strong>
+                        <strong>Are you sure want to end test?</strong>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body" id="end_test_body">
@@ -126,39 +124,45 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
                 </div>
             </div>
         </div>
+
         <div id="question_content" class="card mt-5">
             <div class="card-header bg-info text-white">
-                <p class="d-block" id="<?php echo $_smarty_tpl->tpl_vars['data']->value[0]['content_id'];?>
-"><?php echo $_smarty_tpl->tpl_vars['data']->value[0]['snippet'];?>
+                <p class="d-block question" id="<?php echo $_smarty_tpl->tpl_vars['content_id']->value;?>
+"><?php echo $_smarty_tpl->tpl_vars['question']->value;?>
 </p>
             </div>
-            <div class="d-block card-body ml-5">
-                <?php $_smarty_tpl->_assignInScope('row', json_decode($_smarty_tpl->tpl_vars['data']->value[0]['content_text'],true));?>
-                <?php $_smarty_tpl->_assignInScope('row', $_smarty_tpl->tpl_vars['row']->value['answers']);?>
-
+            <div class="d-block card-body ml-5 text-justify" id="options">
                 <?php
-$_from = $_smarty_tpl->smarty->ext->_foreach->init($_smarty_tpl, $_smarty_tpl->tpl_vars['row']->value, 'line');
-$_smarty_tpl->tpl_vars['line']->do_else = true;
-if ($_from !== null) foreach ($_from as $_smarty_tpl->tpl_vars['line']->value) {
-$_smarty_tpl->tpl_vars['line']->do_else = false;
+$_from = $_smarty_tpl->smarty->ext->_foreach->init($_smarty_tpl, $_smarty_tpl->tpl_vars['options']->value, 'option');
+$_smarty_tpl->tpl_vars['option']->do_else = true;
+if ($_from !== null) foreach ($_from as $_smarty_tpl->tpl_vars['option']->value) {
+$_smarty_tpl->tpl_vars['option']->do_else = false;
 ?>
-                        <input type="radio" class="selected_option ml-3 mr-2" name="userChecked" value="<?php echo $_smarty_tpl->tpl_vars['line']->value['id'];?>
-" id="<?php echo $_smarty_tpl->tpl_vars['line']->value['id'];?>
+                    <div class="d-flex">
+                        <div class="btn-group">
+                            <label class="btn btn-light font-weight-bold" for="<?php echo $_smarty_tpl->tpl_vars['option']->value['id'];?>
+"><?php echo $_smarty_tpl->tpl_vars['option']->value['option_number'];?>
+</label>
+                            <input type="radio" accesskey="<?php echo $_smarty_tpl->tpl_vars['option']->value['option_number'];?>
+" class="selected_option ml-3 mr-2" name="userChecked" id="<?php echo $_smarty_tpl->tpl_vars['option']->value['id'];?>
 ">
-                        <label for="<?php echo $_smarty_tpl->tpl_vars['line']->value['id'];?>
-"><?php echo $_smarty_tpl->tpl_vars['line']->value['answer'];?>
+                        </div>
+                        <label class="mt-2 mb-0" for="<?php echo $_smarty_tpl->tpl_vars['option']->value['id'];?>
+"><?php echo $_smarty_tpl->tpl_vars['option']->value['answer'];?>
 </label><br>
+                    </div>
                 <?php
 }
 $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
             </div>
         </div>
 
-        <div class="d-flex bg-dark card-footer justify-content-center text-white fixed-bottom mb-1">
-            <p id="timer"></p>
+        <div class="d-flex bg-dark card-footer align-items-center justify-content-center text-white fixed-bottom mb-1">
+            <p id="timer" class="mb-0"></p>
             <button class="btn btn-secondary mx-2" type="button" data-target="#list" data-toggle="modal">List</button>
             <button class="btn btn-secondary mx-2" id="prevBtn">Previous</button>
-            <p><span id="current_num">1</span> of <span id="total_num"></span></p>
+            <p class="mb-0"><span id="current_num">1</span> of <span id="total_num"><?php echo $_smarty_tpl->tpl_vars['total_question']->value;?>
+</span></p>
             <button class="btn btn-secondary mx-2" id="nextBtn">Next</button>
             <button class="btn btn-secondary mx-2" id="endBtn" data-toggle="modal" data-target="#endTest">End Test</button>
         </div>

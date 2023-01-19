@@ -21,7 +21,12 @@
 
     <link href="https://staging.appcropolis.com/functions/preview/appcropolis/amk-source/main.css" rel="stylesheet">
 
-    <title>PHP Project | Dashboard</title>
+    <title>PHP Project | Test</title>
+    <style>
+        p{
+            margin-bottom: 0;
+        }
+    </style>
 </head>
 <body onload="timeOut()">
     <div class="container-fluid">
@@ -46,14 +51,10 @@
                     </div>
                     <div class="modal-body" id="sidePanel">
                         <ul class="list-group">
-                            {$count = 0}
-                            {foreach $data as $row}
-                                {$count = $count + 1}
-                                {if $smarty.session.attempted[$row['content_id']] == "Not Attempted"}
-                                    <a type="button" data-dismiss="modal" id="{$row['content_id']}" class="questionLink"> <li class="list-group-item bg-danger text-white"><span>Q {$count} </span>{$row['snippet']}</li></a>
-                                {else}
-                                    <a type="button" data-dismiss="modal" id="{$row['content_id']}" class="questionLink"> <li class="list-group-item bg-success text-white"><span>Q {$count} </span>{$row['snippet']}</li></a>
-                                {/if}
+                            {foreach $all_question as $row}
+                                <div class="card">
+                                    <a type="button" data-dismiss="modal" id="{$row['content_id']}" class="questionLink"> <li class="list-group-item bg-danger text-white"><span>Q {$row['number']} </span>{$row['question']}</li></a>
+                                </div>
                             {/foreach}
                         </ul>
                     </div>
@@ -70,7 +71,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header text-center">
-                        <strong>Are you sure want to end test</strong>
+                        <strong>Are you sure want to end test?</strong>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body" id="end_test_body">
@@ -82,26 +83,29 @@
                 </div>
             </div>
         </div>
+
         <div id="question_content" class="card mt-5">
             <div class="card-header bg-info text-white">
-                <p class="d-block" id="{$data[0]['content_id']}">{$data[0]['snippet']}</p>
+                <p class="d-block question" id="{$content_id}">{$question}</p>
             </div>
-            <div class="d-block card-body ml-5">
-                {assign var="row" value=json_decode($data.0.content_text, true)}
-                {assign var="row" value=$row.answers}
-
-                {foreach $row as $line}
-                        <input type="radio" class="selected_option ml-3 mr-2" name="userChecked" value="{$line['id']}" id="{$line['id']}">
-                        <label for="{$line['id']}">{$line['answer']}</label><br>
+            <div class="d-block card-body ml-5 text-justify" id="options">
+                {foreach $options as $option}
+                    <div class="d-flex">
+                        <div class="btn-group">
+                            <label class="btn btn-light font-weight-bold" for="{$option['id']}">{$option['option_number']}</label>
+                            <input type="radio" accesskey="{$option['option_number']}" class="selected_option ml-3 mr-2" name="userChecked" id="{$option['id']}">
+                        </div>
+                        <label class="mt-2 mb-0" for="{$option['id']}">{$option['answer']}</label><br>
+                    </div>
                 {/foreach}
             </div>
         </div>
 
-        <div class="d-flex bg-dark card-footer justify-content-center text-white fixed-bottom mb-1">
-            <p id="timer"></p>
+        <div class="d-flex bg-dark card-footer align-items-center justify-content-center text-white fixed-bottom mb-1">
+            <p id="timer" class="mb-0"></p>
             <button class="btn btn-secondary mx-2" type="button" data-target="#list" data-toggle="modal">List</button>
             <button class="btn btn-secondary mx-2" id="prevBtn">Previous</button>
-            <p><span id="current_num">1</span> of <span id="total_num"></span></p>
+            <p class="mb-0"><span id="current_num">1</span> of <span id="total_num">{$total_question}</span></p>
             <button class="btn btn-secondary mx-2" id="nextBtn">Next</button>
             <button class="btn btn-secondary mx-2" id="endBtn" data-toggle="modal" data-target="#endTest">End Test</button>
         </div>

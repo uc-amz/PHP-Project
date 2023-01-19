@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.3.0, created on 2023-01-05 12:04:08
-  from 'C:\xampp\htdocs\ucertify\PHP-Project\index.tpl' */
+/* Smarty version 4.3.0, created on 2023-01-17 14:48:51
+  from 'E:\uCertify\website\PHP-Project2\index.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.3.0',
-  'unifunc' => 'content_63b6aea86ef718_13404670',
+  'unifunc' => 'content_63c6a743776c27_87200150',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
-    '6a27151d7a7dd1cc845234e0bbdc561080276ec8' => 
+    '6c23ea94a3431b40ecd288b7b949843ffaefc4be' => 
     array (
-      0 => 'C:\\xampp\\htdocs\\ucertify\\PHP-Project\\index.tpl',
-      1 => 1672916578,
+      0 => 'E:\\uCertify\\website\\PHP-Project2\\index.tpl',
+      1 => 1673963314,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_63b6aea86ef718_13404670 (Smarty_Internal_Template $_smarty_tpl) {
+function content_63c6a743776c27_87200150 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,6 +45,7 @@ function content_63b6aea86ef718_13404670 (Smarty_Internal_Template $_smarty_tpl)
  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"><?php echo '</script'; ?>
 >
 
+    <!-- jQuery CDN -->
     <?php echo '<script'; ?>
  src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"><?php echo '</script'; ?>
 >
@@ -61,12 +62,8 @@ function content_63b6aea86ef718_13404670 (Smarty_Internal_Template $_smarty_tpl)
             </div>
         </div>
     </div>
-    <div class="container mt-5">
-        <div class="card w-50 ml-5">
-            <div class="card-header text-center">
-                <button class="btn btn-primary" id="startBtn">Start</button>
-            </div>
-        </div>
+    <div class="container min-vh-100 d-flex align-items-center justify-content-center">
+        <button class="btn btn-primary mb-5" id="startBtn">Start</button>
     </div>
 </body>
 </html><?php }

@@ -1,316 +1,189 @@
 <?php
-if(isset($_POST['key']) && isset($_POST['content_id']) && isset($_POST['answer_id']) && $_POST['key'] == "answer_changed"){
-    extract($_POST);
-    session_start();
-    $_SESSION['attempted'][$content_id] = $answer_id;
 
-    $data = file_get_contents("question.json");
-    $data = json_decode($data, true);
+function first_question(){
+    $file_data = file_get_contents("question.json");
+    $file_data = json_decode($file_data, true);
 
+    $response['content_id'] = $file_data[0]['content_id'];
+    $response['number'] = 1;
+    $response['question'] = $file_data[0]['snippet'];
+    $temp = $file_data[0]['content_text'];
+    $temp = json_decode($temp);
+    $option_temp = json_decode(json_encode($temp), true)['answers'];
+    $num = 'A';
+    $options = [];
+    foreach ($option_temp as $option) {
+        $option["option_number"] =  $num;
+        $options[] = $option;
+        $num++;
+    }
+    $explaination = json_decode(json_encode($temp), true)['explanation'];
+    $response['options'] = $options;
+    $response['explanation'] = $explaination;
+
+    return $response;
+}
+
+function next_question($current_id){
+    $file_data = file_get_contents("question.json");
+    $file_data = json_decode($file_data, true);
+
+    $flag = false;
     $count = 0;
-    $response = '<ul class="list-group">';
-    foreach($data as $row){
+    foreach($file_data as $row){
         $count++;
-        if($_SESSION['attempted'][$row['content_id']] == "Not Attempted"){
-            $response .= '<a type="button" data-dismiss="modal" id="'.$row['content_id'].'" class="questionLink"> <li class="list-group-item bg-danger text-white"><span>Q '.$count.' </span>'.$row['snippet'].'</li></a>';
+        if($flag){
+            $response['content_id'] = $row['content_id'];
+            $response['number'] = $count;
+            session_start();
+            $response['attempted'] = $_SESSION['attempted'][$row['content_id']];
+            $response['question'] = $row['snippet'];
+            $temp = $row['content_text'];
+            $temp = json_decode($temp);
+            $option_temp = json_decode(json_encode($temp), true)['answers'];
+            $num = 'A';
+            $options = [];
+            foreach($option_temp as $option){
+                $option["option_number"] =  $num;
+                $options[] = $option;
+                $num++;
+            }
+            $explaination = json_decode(json_encode($temp), true)['explanation'];
+            $response['options'] = $options;
+            $response['explanation'] = $explaination;
+
+            return $response;
         }
-        else{
-            $response .= '<a type="button" data-dismiss="modal" id="'.$row['content_id'].'" class="questionLink"> <li class="list-group-item bg-success text-white"><span>Q '.$count.' </span>'.$row['snippet'].'</li></a>';
-        }
-    }
-    $response .= '</ul>';
-    echo $response;
-}
-
-if(isset($_POST['key']) && isset($_POST['content_id']) && $_POST['key'] == "explain"){
-    extract($_POST);
-
-    $data = file_get_contents("question.json");
-    $data = json_decode($data, true);
-    $response = '';
-    foreach($data as $row){
-        if($content_id == $row['content_id']){
-            $content = $row['content_text'];
-            $content = json_decode($content, true);
-            $response = $content['explanation'];
-        }
-    }
-    echo $response;
-}
-if(isset($_POST['key']) && isset($_POST['content_id']) && $_POST['key'] == "prev_explain"){
-    extract($_POST);
-
-    $data = file_get_contents("question.json");
-    $data = json_decode($data, true);
-
-    $prev_id = "";
-    foreach($data as $row){
-        if($row['content_id'] != $content_id)
-            $prev_id = $row['content_id'];
-        else
-            break;
-    }
-
-    $response = '';
-    foreach($data as $row){
-        if($prev_id == $row['content_id']){
-            $content = $row['content_text'];
-            $content = json_decode($content, true);
-            $response = $content['explanation'];
-        }
-    }
-    echo $response;
-}
-if(isset($_POST['key']) && isset($_POST['content_id']) && $_POST['key'] == "next_explain"){
-    extract($_POST);
-
-    $data = file_get_contents("question.json");
-    $data = json_decode($data, true);
-
-    $found = false;
-    $response = '';
-    foreach($data as $row){
-        if($row['content_id'] == $content_id){
-            $found = true;
+        if($row['content_id'] == $current_id){
+            $flag = true;
             continue;
         }
-        if($found){
-            $content = $row['content_text'];
-            $content = json_decode($content, true);
-            $response = $content['explanation'];
-            break;
-        }
     }
-    echo $response;
 }
 
-if(isset($_POST['key']) && $_POST['key'] == "end_test"){
-    $data = file_get_contents("question.json");
-    $data = json_decode($data, true);
+function prev_question($current_id){
+    $file_data = file_get_contents("question.json");
+    $file_data = json_decode($file_data, true);
 
-    $total = 0;
+    foreach($file_data as $row){
+        if($row['content_id'] == $current_id){
+            break;
+        }
+        $prev_id = $row['content_id'];
+    }
+    $count = 0;
+    foreach($file_data as $row){
+        $count++;
+        if($row['content_id'] == $prev_id){
+            $response['content_id'] = $row['content_id'];
+            $response['number'] = $count;
+            session_start();
+            $response['attempted'] = $_SESSION['attempted'][$row['content_id']];
+            $response['question'] = $row['snippet'];
+            $temp = $row['content_text'];
+            $temp = json_decode($temp);
+            $option_temp = json_decode(json_encode($temp), true)['answers'];
+            $num = 'A';
+            $options = [];
+            foreach($option_temp as $option){
+                $option["option_number"] =  $num;
+                $options[] = $option;
+                $num++;
+            }
+            $explaination = json_decode(json_encode($temp), true)['explanation'];
+            $response['options'] = $options;
+            $response['explanation'] = $explaination;
 
-    foreach($data as $row)
-        $total++;
+            return $response;
+        }
+    }
+}
 
-    $response = '<p>Total Question: '. $total .'</p>';
+function selected_question($content_id, $from){
+    $file_data = file_get_contents("question.json");
+    $file_data = json_decode($file_data, true);
+    $count = 0;
+    foreach($file_data as $row){
+        $count++;
+        if($row['content_id'] == $content_id){
+            $response['content_id'] = $row['content_id'];
+            $response['number'] = $count;
+            if($from == "api")
+                session_start();
+            $response['attempted'] = $_SESSION['attempted'][$row['content_id']];
+            $response['question'] = $row['snippet'];
+            $temp = $row['content_text'];
+            $temp = json_decode($temp);
+            $option_temp = json_decode(json_encode($temp), true)['answers'];
+            $num = 'A';
+            $options = [];
+            foreach($option_temp as $option){
+                $option["option_number"] =  $num;
+                $option['id'] = $option['id'];
+                $option['is_correct'] = $option['is_correct'];
+                $options[] = $option;
+                $num++;
+            }
+            $explaination = json_decode(json_encode($temp), true)['explanation'];
+            $response['options'] = $options;
+            $response['explanation'] = $explaination;
 
+            return $response;
+        }
+    }
+}
+
+function total_question(){
+    $file_data = file_get_contents("question.json");
+    $file_data = json_decode($file_data, true);
+    $count = 0;
+    foreach($file_data as $row){
+        $count++;
+    }
+    return $count;
+}
+
+function all_question(){
+    $file_data = file_get_contents("question.json");
+    $file_data = json_decode($file_data, true);
+    $count = 1;
+    $question = array();
+    foreach($file_data as $row){
+        $question[] = array("number" => $count, "content_id" => $row['content_id'], "question" => $row['snippet']);
+        $count++;
+    }
+    return $question;
+}
+
+function end_test($from){
     $attempted = 0;
-    session_start();
-    foreach($_SESSION['attempted'] as $data){
-        if($data != "Not Attempted")
+    if($from == "api")
+        session_start();
+    foreach($_SESSION['attempted'] as $row){
+        if($row != "Not Attempted")
             $attempted++;
     }
-    $response .= '<p>Attempted Question: '. $attempted .'</p>';
-    $response .= '<p>Remaining Question: '. ($total-$attempted) .'</p>';
-    echo $response;
+
+    $response = array(
+        "total" => total_question(),
+        "attempted" => $attempted,
+        "remaining" => total_question()-$attempted
+    );
+    
+    return $response;
 }
 
-if(isset($_POST['key']) && $_POST['key'] == "total_question"){
-    $data = file_get_contents("question.json");
-    $data = json_decode($data, true);
+function total_correct(){
+    $file_data = file_get_contents("question.json");
+    $file_data = json_decode($file_data, true);
 
-    $count = 0;
-
-    foreach($data as $row)
-        $count++;
-
-    echo $count;
-}
-
-if(isset($_POST['key']) && isset($_POST['content_id']) && $_POST['key'] == "prev_question"){
-    extract($_POST);
-
-    $data = file_get_contents("question.json");
-    $data = json_decode($data, true);
-
-    $prev_id = "";
-    foreach($data as $row){
-        if($row['content_id'] != $content_id)
-            $prev_id = $row['content_id'];
-        else
-            break;
-    }
-
-    $response = "";
-    
-    foreach($data as $row){
-        if($row['content_id'] == $prev_id){
-            $question = json_decode($row['content_text'], true)['question'];
-            $response = '<div class="card-header bg-info text-white">';
-            $response .= '<p class="d-block" id="'.$row['content_id'].'">' . $question . '</p>';
-            $response .= '</div><div class="d-block card-body ml-5">';
-            $answers = json_decode($row['content_text'], true)['answers'];
-            session_start();
-            foreach($answers as $answer){
-                if($_SESSION['attempted'][$row['content_id']] == $answer['id']){
-                    $response .= '<input type="radio" name="userChecked" class="selected_option mx-2" value="' . $answer['id'] . '" id="' . $answer['id'] . '" checked="checked">
-                    <label for="' . $answer['id'] . '">' . $answer['answer'] . '</label><br>';
-                }
-                else{
-                    $response .= '<input type="radio" name="userChecked" class="selected_option mx-2" value="' . $answer['id'] . '" id="' . $answer['id'] . '">
-                    <label for="' . $answer['id'] . '">' . $answer['answer'] . '</label><br>';
-                }
-            }
-            $response .= '</div>';
-            break;
+    $correct = 0;
+    foreach($file_data as $row){
+        $content = json_decode($row['content_text'], true);
+        foreach($content['answers'] as $option){
+            if($_SESSION['attempted'][$row['content_id']] == $option['id'] && $option['is_correct'] == 1)
+                $correct++;
         }
     }
-    
-    echo $response;
-
-}
-if(isset($_POST['key']) && isset($_POST['content_id']) && $_POST['key'] == "next_question"){
-    extract($_POST);
-
-    $data = file_get_contents("question.json");
-    $data = json_decode($data, true);
-
-    $response = "";
-    $found = false;
-    
-    foreach($data as $row){
-        if($row['content_id'] == $content_id){
-            $found = true;
-            continue;
-        }
-        if($found){
-            $question = json_decode($row['content_text'], true)['question'];
-            $response = '<div class="card-header bg-info text-white">';
-            $response .= '<p class="d-block" id="'.$row['content_id'].'">' . $question . '</p>';
-            $response .= '</div><div class="d-block card-body ml-5">';
-            $answers = json_decode($row['content_text'], true)['answers'];
-            session_start();
-            foreach($answers as $answer){
-                if($_SESSION['attempted'][$row['content_id']] == $answer['id']){
-                    $response .= '<input type="radio" name="userChecked" class="selected_option mx-2" value="' . $answer['id'] . '" id="' . $answer['id'] . '" checked="checked">
-                    <label for="' . $answer['id'] . '">' . $answer['answer'] . '</label><br>';
-                }
-                else{
-                    $response .= '<input type="radio" name="userChecked" class="selected_option mx-2" value="' . $answer['id'] . '" id="' . $answer['id'] . '">
-                    <label for="' . $answer['id'] . '">' . $answer['answer'] . '</label><br>';
-                }
-            }
-            $response .= '</div>';
-            break;
-        }
-    }
-    
-    echo $response;
-
-}
-if(isset($_POST['key']) && isset($_POST['content_id']) && $_POST['key'] == "review_prev_question"){
-    extract($_POST);
-
-    $data = file_get_contents("question.json");
-    $data = json_decode($data, true);
-
-    $prev_id = "";
-    foreach($data as $row){
-        if($row['content_id'] != $content_id)
-            $prev_id = $row['content_id'];
-        else
-            break;
-    }
-
-    $response = "";
-    
-    foreach($data as $row){
-        if($row['content_id'] == $prev_id){
-            $question = json_decode($row['content_text'], true)['question'];
-            $response = '<div class="card-header bg-info text-white">';
-            $response .= '<p class="d-block" id="'.$row['content_id'].'">' . $question . '</p>';
-            $response .= '</div><div class="d-block card-body ml-5">';
-            $answers = json_decode($row['content_text'], true)['answers'];
-            session_start();
-            foreach($answers as $answer){
-                if($_SESSION['attempted'][$row['content_id']] == $answer['id']){
-                    $response .= '<input type="radio" name="userChecked" class="selected_option mx-2" value="' . $answer['id'] . '" id="' . $answer['id'] . '" checked="checked" disabled>
-                    <label for="' . $answer['id'] . '">' . $answer['answer'] . '</label><br>';
-                }
-                else{
-                    $response .= '<input type="radio" name="userChecked" class="selected_option mx-2" value="' . $answer['id'] . '" id="' . $answer['id'] . '" disabled>
-                    <label for="' . $answer['id'] . '">' . $answer['answer'] . '</label><br>';
-                }
-            }
-            $response .= '</div>';
-            break;
-        }
-    }
-    
-    echo $response;
-
-}
-if(isset($_POST['key']) && isset($_POST['content_id']) && $_POST['key'] == "review_next_question"){
-    extract($_POST);
-
-    $data = file_get_contents("question.json");
-    $data = json_decode($data, true);
-
-    $response = "";
-    $found = false;
-    
-    foreach($data as $row){
-        if($row['content_id'] == $content_id){
-            $found = true;
-            continue;
-        }
-        if($found){
-            $question = json_decode($row['content_text'], true)['question'];
-            $response = '<div class="card-header bg-info text-white">';
-            $response .= '<p class="d-block" id="'.$row['content_id'].'">' . $question . '</p>';
-            $response .= '</div><div class="d-block card-body ml-5">';
-            $answers = json_decode($row['content_text'], true)['answers'];
-            session_start();
-            foreach($answers as $answer){
-                if($_SESSION['attempted'][$row['content_id']] == $answer['id']){
-                    $response .= '<input type="radio" name="userChecked" class="selected_option mx-2" value="' . $answer['id'] . '" id="' . $answer['id'] . '" checked="checked" disabled>
-                    <label for="' . $answer['id'] . '">' . $answer['answer'] . '</label><br>';
-                }
-                else{
-                    $response .= '<input type="radio" name="userChecked" class="selected_option mx-2" value="' . $answer['id'] . '" id="' . $answer['id'] . '" disabled>
-                    <label for="' . $answer['id'] . '">' . $answer['answer'] . '</label><br>';
-                }
-            }
-            $response .= '</div>';
-            break;
-        }
-    }
-    
-    echo $response;
-
-}
-
-if(isset($_POST['id'])){
-    $id = $_POST['id'];
-    
-    $data = file_get_contents("question.json");
-    $data = json_decode($data, true);
-    
-    $response = "";
-    
-    foreach($data as $row){
-        if($row['content_id'] == $id){
-            $question = json_decode($row['content_text'], true)['question'];
-            $response = '<div class="card-header bg-info text-white">';
-            $response .= '<p class="d-block" id="'.$row['content_id'].'">' . $question . '</p>';
-            $response .= '</div><div class="d-block card-body ml-5">';
-            $answers = json_decode($row['content_text'], true)['answers'];
-            session_start();
-            foreach($answers as $answer){
-                if($_SESSION['attempted'][$row['content_id']] == $answer['id']){
-                    $response .= '<input type="radio" name="userChecked" class="selected_option mx-2" value="' . $answer['id'] . '" id="' . $answer['id'] . '" checked="checked">
-                    <label for="' . $answer['id'] . '">' . $answer['answer'] . '</label><br>';
-                }
-                else{
-                    $response .= '<input type="radio" name="userChecked" class="selected_option mx-2" value="' . $answer['id'] . '" id="' . $answer['id'] . '">
-                    <label for="' . $answer['id'] . '">' . $answer['answer'] . '</label><br>';
-                }
-            }
-            $response .= '</div>';
-            break;
-        }
-    }
-    
-    echo $response;
+    return $correct;
 }

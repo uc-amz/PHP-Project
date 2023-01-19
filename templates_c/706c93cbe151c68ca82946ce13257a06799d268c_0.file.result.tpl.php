@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.3.0, created on 2023-01-10 11:13:21
-  from 'C:\xampp\htdocs\ucertify\PHP-Project\result.tpl' */
+/* Smarty version 4.3.0, created on 2023-01-19 08:17:50
+  from 'E:\uCertify\website\PHP-Project2\result.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.3.0',
-  'unifunc' => 'content_63bd3a414f4179_00631967',
+  'unifunc' => 'content_63c8ee9e5c6a95_47569408',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
-    'b403651790baf56a08cfdf621883926b52262f40' => 
+    '706c93cbe151c68ca82946ce13257a06799d268c' => 
     array (
-      0 => 'C:\\xampp\\htdocs\\ucertify\\PHP-Project\\result.tpl',
-      1 => 1673345558,
+      0 => 'E:\\uCertify\\website\\PHP-Project2\\result.tpl',
+      1 => 1674112665,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_63bd3a414f4179_00631967 (Smarty_Internal_Template $_smarty_tpl) {
+function content_63c8ee9e5c6a95_47569408 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,6 +49,11 @@ function content_63bd3a414f4179_00631967 (Smarty_Internal_Template $_smarty_tpl)
  src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"><?php echo '</script'; ?>
 >
     <title>Test Result</title>
+    <style>
+        p{
+            margin-bottom: 0;
+        }
+    </style>
 </head>
 <body>
     <div class="container-fluid">
@@ -61,8 +66,8 @@ function content_63bd3a414f4179_00631967 (Smarty_Internal_Template $_smarty_tpl)
             </div>
         </div>
     </div>
-    <div class="container row my-5 justify-content-center">
-        <div class="card ml-5 w-50">
+    <div class="container my-5 justify-content-center">
+        <div class="card m-auto w-50">
             <div class="card-header bg-info text-white text-center">
                 <h5>Result</h5>
             </div>
@@ -99,65 +104,49 @@ function content_63bd3a414f4179_00631967 (Smarty_Internal_Template $_smarty_tpl)
                 </tr>
             </thead>
             <tbody>
-                    <?php $_smarty_tpl->_assignInScope('index', 1);?>
-                    
                     <?php
 $_from = $_smarty_tpl->smarty->ext->_foreach->init($_smarty_tpl, $_smarty_tpl->tpl_vars['data']->value, 'row');
 $_smarty_tpl->tpl_vars['row']->do_else = true;
 if ($_from !== null) foreach ($_from as $_smarty_tpl->tpl_vars['row']->value) {
 $_smarty_tpl->tpl_vars['row']->do_else = false;
 ?>
+                        <?php $_smarty_tpl->_assignInScope('question', selected_question($_smarty_tpl->tpl_vars['row']->value['content_id'],"file"));?>
                         <tr>
-                            <td><?php echo $_smarty_tpl->tpl_vars['index']->value;?>
+                            <td><?php echo $_smarty_tpl->tpl_vars['question']->value['number'];?>
 </td>
-                            <td><a href="review.php?content_id=<?php echo $_smarty_tpl->tpl_vars['row']->value['content_id'];?>
-&current_num=<?php echo $_smarty_tpl->tpl_vars['index']->value;?>
-" class="question_link" id="<?php echo $_smarty_tpl->tpl_vars['row']->value['content_id'];?>
-"><?php echo $_smarty_tpl->tpl_vars['row']->value['snippet'];?>
+                            <td><a href="review.php?content_id=<?php echo $_smarty_tpl->tpl_vars['question']->value['content_id'];?>
+" class="question_link" id="<?php echo $_smarty_tpl->tpl_vars['question']->value['content_id'];?>
+"><?php echo $_smarty_tpl->tpl_vars['question']->value['question'];?>
 </a></td>
                             <td>
                                 <?php $_smarty_tpl->_assignInScope('result', "Not Attempted");?>
-                                <?php $_smarty_tpl->_assignInScope('content', json_decode($_smarty_tpl->tpl_vars['row']->value['content_text'],true));?>
-                                <?php $_smarty_tpl->_assignInScope('opt_num', 1);?>
-                                <?php $_smarty_tpl->_assignInScope('opt_value', "A");?>
                                 <?php
-$_from = $_smarty_tpl->smarty->ext->_foreach->init($_smarty_tpl, $_smarty_tpl->tpl_vars['content']->value['answers'], 'option');
+$_from = $_smarty_tpl->smarty->ext->_foreach->init($_smarty_tpl, $_smarty_tpl->tpl_vars['question']->value['options'], 'option');
 $_smarty_tpl->tpl_vars['option']->do_else = true;
 if ($_from !== null) foreach ($_from as $_smarty_tpl->tpl_vars['option']->value) {
 $_smarty_tpl->tpl_vars['option']->do_else = false;
 ?>
-                                    <?php if ($_smarty_tpl->tpl_vars['opt_num']->value == 1) {?>
-                                        <?php $_smarty_tpl->_assignInScope('opt_value', "A");?>
-                                    <?php } elseif ($_smarty_tpl->tpl_vars['opt_num']->value == 2) {?>
-                                        <?php $_smarty_tpl->_assignInScope('opt_value', "B");?>
-                                    <?php } elseif ($_smarty_tpl->tpl_vars['opt_num']->value == 3) {?>
-                                        <?php $_smarty_tpl->_assignInScope('opt_value', "C");?>
-                                    <?php } elseif ($_smarty_tpl->tpl_vars['opt_num']->value == 4) {?>
-                                        <?php $_smarty_tpl->_assignInScope('opt_value', "D");?>
-                                    <?php }?>
                                     <?php $_smarty_tpl->_assignInScope('color', "secondary");?>
                                     <?php $_smarty_tpl->_assignInScope('flag', false);?>
-                                    <?php if ($_smarty_tpl->tpl_vars['session']->value[$_smarty_tpl->tpl_vars['row']->value['content_id']] == $_smarty_tpl->tpl_vars['option']->value['id']) {?>
+                                    <?php if ($_smarty_tpl->tpl_vars['session']->value[$_smarty_tpl->tpl_vars['question']->value['content_id']] == $_smarty_tpl->tpl_vars['option']->value['id']) {?>
+                                        <?php $_smarty_tpl->_assignInScope('flag', true);?>
                                         <?php if ($_smarty_tpl->tpl_vars['option']->value['is_correct'] == 1) {?>
                                             <?php $_smarty_tpl->_assignInScope('result', "Correct");?>
-                                            <?php $_smarty_tpl->_assignInScope('flag', true);?>
-                                            <div class="d-inline-block alert alert-success"><?php echo $_smarty_tpl->tpl_vars['opt_value']->value;?>
+                                            <div class="d-inline-block alert alert-success"><?php echo $_smarty_tpl->tpl_vars['option']->value['option_number'];?>
 </div>
                                         <?php } else { ?>
                                             <?php $_smarty_tpl->_assignInScope('result', "Incorrect");?>
-                                            <?php $_smarty_tpl->_assignInScope('flag', true);?>
-                                            <div class="d-inline-block alert alert-danger"><?php echo $_smarty_tpl->tpl_vars['opt_value']->value;?>
+                                            <div class="d-inline-block alert alert-danger"><?php echo $_smarty_tpl->tpl_vars['option']->value['option_number'];?>
 </div>
                                         <?php }?>
                                     <?php }?>
                                     <?php if ($_smarty_tpl->tpl_vars['option']->value['is_correct'] == 1 && (!$_smarty_tpl->tpl_vars['flag']->value)) {?>
-                                        <div class="d-inline-block alert alert-success"><?php echo $_smarty_tpl->tpl_vars['opt_value']->value;?>
+                                        <div class="d-inline-block alert alert-success"><?php echo $_smarty_tpl->tpl_vars['option']->value['option_number'];?>
 </div>
                                     <?php } elseif ((!$_smarty_tpl->tpl_vars['flag']->value)) {?>
-                                        <div class="d-inline-block alert alert-secondary"><?php echo $_smarty_tpl->tpl_vars['opt_value']->value;?>
+                                        <div class="d-inline-block alert alert-secondary"><?php echo $_smarty_tpl->tpl_vars['option']->value['option_number'];?>
 </div>
                                     <?php }?>
-                                    <?php $_smarty_tpl->_assignInScope('opt_num', $_smarty_tpl->tpl_vars['opt_num']->value+1);?>
                                 <?php
 }
 $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
@@ -175,7 +164,6 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
                                 <?php }?>
                             </td>
                         </tr>
-                        <?php $_smarty_tpl->_assignInScope('index', $_smarty_tpl->tpl_vars['index']->value+1);?>
                     <?php
 }
 $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>

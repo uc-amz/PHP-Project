@@ -18,6 +18,11 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <title>Test Result</title>
+    <style>
+        p{
+            margin-bottom: 0;
+        }
+    </style>
 </head>
 <body>
     <div class="container-fluid">
@@ -30,8 +35,8 @@
             </div>
         </div>
     </div>
-    <div class="container row my-5 justify-content-center">
-        <div class="card ml-5 w-50">
+    <div class="container my-5 justify-content-center">
+        <div class="card m-auto w-50">
             <div class="card-header bg-info text-white text-center">
                 <h5>Result</h5>
             </div>
@@ -61,46 +66,31 @@
                 </tr>
             </thead>
             <tbody>
-                    {$index = 1}
-                    
                     {foreach $data as $row}
+                        {assign var="question" value=selected_question($row['content_id'], "file")}
                         <tr>
-                            <td>{$index}</td>
-                            <td><a href="review.php?content_id={$row.content_id}&current_num={$index}" class="question_link" id="{$row.content_id}">{$row.snippet}</a></td>
+                            <td>{$question.number}</td>
+                            <td><a href="review.php?content_id={$question.content_id}" class="question_link" id="{$question.content_id}">{$question.question}</a></td>
                             <td>
-                                {$result = "Not Attempted"}
-                                {assign var='content' value=json_decode($row.content_text, true)}
-                                {$opt_num = 1}
-                                {$opt_value = "A"}
-                                {foreach $content.answers as $option}
-                                    {if $opt_num eq 1}
-                                        {$opt_value = "A"}
-                                    {elseif $opt_num eq 2}
-                                        {$opt_value = "B"}
-                                    {elseif $opt_num eq 3}
-                                        {$opt_value = "C"}
-                                    {elseif $opt_num eq 4}
-                                        {$opt_value = "D"}
-                                    {/if}
-                                    {$color = "secondary"}
-                                    {$flag = false}
-                                    {if $session[$row['content_id']] eq $option['id']}
-                                        {if $option['is_correct'] eq 1}
-                                            {$result = "Correct"}
-                                            {$flag = true}
-                                            <div class="d-inline-block alert alert-success">{$opt_value}</div>
+                                {assign var="result" value = "Not Attempted"}
+                                {foreach $question.options as $option}
+                                    {assign var="color" value = "secondary"}
+                                    {assign var="flag" value = false}
+                                    {if $session[$question.content_id] eq $option.id}
+                                        {assign var="flag" value = true}
+                                        {if $option.is_correct eq 1}
+                                            {assign var="result" value = "Correct"}
+                                            <div class="d-inline-block alert alert-success">{$option.option_number}</div>
                                         {else}
-                                            {$result = "Incorrect"}
-                                            {$flag = true}
-                                            <div class="d-inline-block alert alert-danger">{$opt_value}</div>
+                                            {assign var="result" value = "Incorrect"}
+                                            <div class="d-inline-block alert alert-danger">{$option.option_number}</div>
                                         {/if}
                                     {/if}
-                                    {if $option['is_correct'] eq 1 && (not $flag)}
-                                        <div class="d-inline-block alert alert-success">{$opt_value}</div>
+                                    {if $option.is_correct eq 1 && (not $flag)}
+                                        <div class="d-inline-block alert alert-success">{$option.option_number}</div>
                                     {elseif (not $flag)}
-                                        <div class="d-inline-block alert alert-secondary">{$opt_value}</div>
+                                        <div class="d-inline-block alert alert-secondary">{$option.option_number}</div>
                                     {/if}
-                                    {$opt_num = $opt_num + 1}
                                 {/foreach}
                             </td>
                             <td>
@@ -113,7 +103,6 @@
                                 {/if}
                             </td>
                         </tr>
-                        {$index = $index+1}
                     {/foreach}
             </tbody>
         </table>

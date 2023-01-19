@@ -16,6 +16,7 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- jQuery CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <title>uCertify Test</title>
 </head>
@@ -30,12 +31,8 @@
             </div>
         </div>
     </div>
-    <div class="container mt-5">
-        <div class="card w-50 ml-5">
-            <div class="card-header text-center">
-                <button class="btn btn-primary" id="startBtn">Start</button>
-            </div>
-        </div>
+    <div class="container min-vh-100 d-flex align-items-center justify-content-center">
+        <button class="btn btn-primary mb-5" id="startBtn">Start</button>
     </div>
 </body>
 </html>

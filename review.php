@@ -3,126 +3,137 @@
     if(!isset($_SESSION['attempted']) || !isset($_GET['content_id']))
         header("location: index.php");
 
+    require_once "./process.php";
     include_once "./smarty/Smarty.class.php";
-    $review = new Smarty();
+    $smarty = new Smarty();
 
-    $data = file_get_contents("question.json");
-    $data = json_decode($data, true);
-    $review->assign("data", $data);
     $content_id = $_GET['content_id'];
-    $review->assign("content_id", $content_id);
-    $review->assign('session', $_SESSION['attempted']);
-    $review->display("review.tpl");
-?> 
+
+    $smarty->assign("question", selected_question($content_id, "file"));
+    $smarty->assign("total", total_question());
+    $smarty->display("review.tpl");
+?>
 
 <script>
-    var content_id = "<?php echo $_GET['content_id'] ?>";
-    var current_num = "<?php echo $_GET['current_num'] ?>";
-    var total_num = 0;
-
-    $.ajax({
-        url:"process.php",
-        type:"POST",
-        data:{
-            key:"explain",
-            content_id:content_id
-        },
-        success:function(data, status){
-            if(status == "success"){
-                $('#explain').html(data);
-            }
-        }
-    })
-
-    getTotalQuestion();
+    current_num = $('#current_num').text();
+    current_id = $('.question').attr('id');
     $(document).ready(function(){
-        $('#current_num').text(current_num);
         $('#dashboardBtn').click(function(){
             window.location.replace("logout.php");
         })
         $('#resultBtn').click(function(){
             window.location.replace("result.php");
         })
-
         $('#prevBtn').click(function(){
             if(current_num > 1){
                 $.ajax({
-                    url:"process.php",
+                    url:"api-question.php",
                     type:"POST",
-                    data:{
-                        key:"prev_explain",
-                        content_id:content_id
-                    },
-                    success:function(data, status){
-                        if(status == "success"){
-                            $('#explain').html(data);
-                        }
-                    }
-                })
-                $.ajax({
-                    url:"process.php",
-                    type:"POST",
-                    data:{
-                        key:"review_prev_question",
-                        content_id:content_id
-                    },
-                    success:function(data, status){
-                        $('#question_content').html(data);
+                    data:JSON.stringify({
+                        key : "prev_question",
+                        current_id : current_id
+                    }),
+                    success : function(data){
                         current_num--;
-                        $('#current_num').text(current_num);
-                        content_id = $('#question_content').find('p').attr('id');
+                        current_id = data.content_id;
+                        var obj = {
+                            Title: "Review Question | uCertify",
+                            Url: window.location.href.split("?")[0]+"?content_id="+current_id
+                        };
+                        history.pushState(obj, obj.Title, obj.Url);
+                        load_question(data);
                     }
                 })
             }
         })
         $('#nextBtn').click(function(){
-            if(current_num < Number(total_num)){
+            if(current_num < Number($('#total_num').text())){
                 $.ajax({
-                    url:"process.php",
+                    url:"api-question.php",
                     type:"POST",
-                    data:{
-                        key:"next_explain",
-                        content_id:content_id
-                    },
-                    success:function(data, status){
-                        if(status == "success"){
-                            $('#explain').html(data);
+                    data:JSON.stringify({
+                        key : "next_question",
+                        current_id : current_id
+                    }),
+                    success : function(data){
+                        current_num++;
+                        current_id = data.content_id;
+                        var obj = {
+                            Title: "Review Question | uCertify",
+                            Url: window.location.href.split("?")[0]+"?content_id="+current_id
+                        };
+                        history.pushState(obj, obj.Title, obj.Url);
+                        load_question(data);
+                    }
+                })
+            }
+        })
+
+        function load_question(data){
+            $('.question').text(data.question);
+            $('#current_num').text(data.number);
+            let temp = "";
+            let correct_option = "";
+            $.each(data.options, function(key, value){
+                if(data.attempted == "Not Attempted" && value.is_correct == 1){
+                    correct_option = value.option_number;
+                    temp += '<div class="alert alert-success pt-1 pb-0 d-flex">'+
+                            '<div class="btn-group">'+
+                                '<label class="btn btn-light font-weight-bold" for="'+value.id+'">'+value.option_number+'</label>'+
+                                '<input type="radio" disabled accesskey="'+value.option_number+'" class="selected_option ml-3 mr-2" name="userChecked" id="'+value.id+'">'+
+                            '</div>'+
+                            '<label class="mt-2 mb-0" for="'+value.id+'">'+value.answer+'</label><br>'+
+                        '</div>';
+                }
+                else{
+                    if(data.attempted == value.id){
+                        if(value.is_correct == 1){
+                            correct_option = value.option_number;
+                            temp += '<div class="alert alert-success pt-1 pb-0 d-flex">'+
+                                '<div class="btn-group">'+
+                                    '<label class="btn btn-light font-weight-bold" for="'+value.id+'">'+value.option_number+'</label>'+
+                                    '<input type="radio" checked="checked" disabled accesskey="'+value.option_number+'" class="selected_option ml-3 mr-2" name="userChecked" id="'+value.id+'">'+
+                                '</div>'+
+                                '<label class="mt-2 mb-0" for="'+value.id+'">'+value.answer+'</label><br>'+
+                            '</div>';
+                        }
+                        else{
+                            temp += '<div class="alert alert-danger pt-1 pb-0 d-flex">'+
+                                '<div class="btn-group">'+
+                                    '<label class="btn btn-light font-weight-bold" for="'+value.id+'">'+value.option_number+'</label>'+
+                                    '<input type="radio" checked="checked" disabled accesskey="'+value.option_number+'" class="selected_option ml-3 mr-2" name="userChecked" id="'+value.id+'">'+
+                                '</div>'+
+                                '<label class="mt-2 mb-0" for="'+value.id+'">'+value.answer+'</label><br>'+
+                            '</div>';
                         }
                     }
-                })
-                $.ajax({
-                    url:"process.php",
-                    type:"POST",
-                    data:{
-                        key:"review_next_question",
-                        content_id:content_id
-                    },
-                    success:function(data, status){
-                        $('#question_content').html(data);
-                        current_num++;
-                        $('#current_num').text(current_num);
-                        content_id = $('#question_content').find('p').attr('id');
+                    else{
+                        if(value.is_correct == 1){
+                            correct_option = value.option_number;
+                            temp += '<div class="alert alert-success pt-1 pb-0 d-flex">'+
+                                '<div class="btn-group">'+
+                                    '<label class="btn btn-light font-weight-bold" for="'+value.id+'">'+value.option_number+'</label>'+
+                                    '<input type="radio" disabled accesskey="'+value.option_number+'" class="selected_option ml-3 mr-2" name="userChecked" id="'+value.id+'">'+
+                                '</div>'+
+                                '<label class="mt-2 mb-0" for="'+value.id+'">'+value.answer+'</label><br>'+
+                            '</div>';
+                        }
+                        else{
+                            temp += '<div class="alert pt-1 pb-0 d-flex">'+
+                                '<div class="btn-group">'+
+                                    '<label class="btn btn-light font-weight-bold" for="'+value.id+'">'+value.option_number+'</label>'+
+                                    '<input type="radio" disabled accesskey="'+value.option_number+'" class="selected_option ml-3 mr-2" name="userChecked" id="'+value.id+'">'+
+                                '</div>'+
+                                '<label class="mt-2 mb-0" for="'+value.id+'">'+value.answer+'</label><br>'+
+                            '</div>';
+                        }
                     }
-                })
-            }
-            else
-                alert("false");
-        })
-    })
-
-    function getTotalQuestion(){
-        $.ajax({
-            url:"process.php",
-            type:"POST",
-            data:{
-                key:"total_question"
-            },
-            success:function(data, status){
-                if(status == "success"){
-                    total_num = data;
-                    $('#total_num').text(total_num);
                 }
-            }
-        })
-    }
+            });
+            $('#options').html(temp);
+            correct_option = "Correct Option : " + correct_option;
+            $('#correct_option').html(correct_option);
+            $('#explain').text(data.explanation);
+        }
+    })
 </script>
