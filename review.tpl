@@ -107,7 +107,7 @@
             <strong>Explaination: </strong>
             <p id="explain">{$question.explanation}</p>
         </div>
-        <div class="d-flex bg-light card-footer bg-dark text-white justify-content-center fixed-bottom mb-1">
+        <div class="d-flex bg-light card-footer bg-dark text-white align-items-center justify-content-center fixed-bottom mb-1">
             <button class="btn btn-secondary mx-2" id="dashboardBtn">Dashboard</button>
             <button class="btn btn-secondary mx-2" id="prevBtn">Previous</button>
             <p><span id="current_num">{$question.number}</span> of <span id="total_num">{$total}</span></p>

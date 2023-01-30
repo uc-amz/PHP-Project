@@ -9,7 +9,7 @@
 
     $content_id = $_GET['content_id'];
 
-    $smarty->assign("question", selected_question($content_id, "file"));
+    $smarty->assign("question", selected_question($content_id, "review"));
     $smarty->assign("total", total_question());
     $smarty->display("review.tpl");
 ?>

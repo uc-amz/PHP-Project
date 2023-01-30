@@ -6,7 +6,9 @@ function first_question(){
 
     $response['content_id'] = $file_data[0]['content_id'];
     $response['number'] = 1;
-    $response['question'] = $file_data[0]['snippet'];
+    $temp = $file_data[0]['content_text'];
+    $temp = json_decode($temp);
+    $response['question'] = json_decode(json_encode($temp), true)['question'];
     $temp = $file_data[0]['content_text'];
     $temp = json_decode($temp);
     $option_temp = json_decode(json_encode($temp), true)['answers'];
@@ -37,7 +39,9 @@ function next_question($current_id){
             $response['number'] = $count;
             session_start();
             $response['attempted'] = $_SESSION['attempted'][$row['content_id']];
-            $response['question'] = $row['snippet'];
+            $temp = $row['content_text'];
+            $temp = json_decode($temp);
+            $response['question'] = json_decode(json_encode($temp), true)['question'];
             $temp = $row['content_text'];
             $temp = json_decode($temp);
             $option_temp = json_decode(json_encode($temp), true)['answers'];
@@ -79,7 +83,9 @@ function prev_question($current_id){
             $response['number'] = $count;
             session_start();
             $response['attempted'] = $_SESSION['attempted'][$row['content_id']];
-            $response['question'] = $row['snippet'];
+            $temp = $row['content_text'];
+            $temp = json_decode($temp);
+            $response['question'] = json_decode(json_encode($temp), true)['question'];
             $temp = $row['content_text'];
             $temp = json_decode($temp);
             $option_temp = json_decode(json_encode($temp), true)['answers'];
@@ -108,10 +114,20 @@ function selected_question($content_id, $from){
         if($row['content_id'] == $content_id){
             $response['content_id'] = $row['content_id'];
             $response['number'] = $count;
-            if($from == "api")
+            if($from == "api"){
                 session_start();
+                $temp = $row['content_text'];
+                $temp = json_decode($temp);
+                $response['question'] = json_decode(json_encode($temp), true)['question'];
+            }
+            else if($from == "review"){
+                $temp = $row['content_text'];
+                $temp = json_decode($temp);
+                $response['question'] = json_decode(json_encode($temp), true)['question'];
+            }
+            else
+                $response['question'] = $row['snippet'];
             $response['attempted'] = $_SESSION['attempted'][$row['content_id']];
-            $response['question'] = $row['snippet'];
             $temp = $row['content_text'];
             $temp = json_decode($temp);
             $option_temp = json_decode(json_encode($temp), true)['answers'];
